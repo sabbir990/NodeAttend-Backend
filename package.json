@@ -24,10 +24,11 @@
   },
   "dependencies": {
     "@types/dotenv": "^6.1.1",
+    "@types/nodemailer": "^8.0.0",
     "cors": "^2.8.6",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
     "mongoose": "^9.6.1",
-    "resend": "^6.12.3"
+    "nodemailer": "^8.0.7"
   }
 }

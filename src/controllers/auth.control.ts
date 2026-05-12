@@ -1,7 +1,8 @@
 import express, { type Request, type Response } from "express";
 import crypto from 'crypto';
 import studentRegistrationOtpModel from "../models/studentRegistrationOtp.model";
-import { Resend } from "resend";
+import sendEmail from "../utils/emailSender.utils";
+import registrationOTPTemplate from "../templates/registrationOTP.template";
 
 const authRouter = express.Router();
 
@@ -17,16 +18,12 @@ authRouter.post("/create-student-registration-otp", async (req: Request, res: Re
         const otpCreationResponse = await studentRegistrationOtpModel.create({ email, code: otpCode });
 
         if (otpCreationResponse._id) {
-            const resend = new Resend(process.env.RESEND_API_KEY);
 
-            const emailSendingResponse = await resend.emails.send({
-                from: `onboarding@resend.dev`,
+            await sendEmail({
                 to: email,
-                subject: "Your student registration OTP for NodeAttend has arrived!",
-                html: `<strong>Your OTP is: ${otpCode}</strong>. It expires in 5 minutes.`
+                subject: "Your one time password ( OTP ) has arrived. Use the OTP and register to the app!",
+                html: registrationOTPTemplate(otpCode)
             })
-
-            console.log(emailSendingResponse)
 
             return res.status(200).json({
                 success: true,
